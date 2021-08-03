@@ -3,3 +3,11 @@
 set nombre (mpc -f "%artist% - %title%" | head -n 1)
 set ubicacion /home/lugo/.lyrics/$nombre.txt
 crow -t es -f $ubicacion | tee $nombre.templyc
+
+function estaEnEspañol
+   set idiomas (mpc -f "%albumartist% %album% %title%" | head -n 1 | crow -t es -i | grep -P '\[.*\]')
+   echo $idiomas
+   if test $idiomas = '[ English -> Spanish ]'
+       set esEspañol true
+   end
+end
