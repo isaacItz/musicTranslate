@@ -2,9 +2,13 @@
 #set je (mpc -f "%file%" | head -n 1 | sed -r 's/.*\///' | sed -r 's/(\.mp3|\.flac)/.lrc/') ; find /home/lugo/DOWNLOADS/ -iname "*$je*"
 set nombre (mpc -f "%artist% - %title%" | head -n 1)
 set ubicacion /home/lugo/.lyrics/$nombre.txt
+set tempPath letras/$nombre.templyc
 
 if test -e $ubicacion
-    crow -t es -f $ubicacion | tee letras/$nombre.templyc
+    #crow -t es -f $ubicacion | tee $tempPath
+    #crow -t es -f $ubicacion
+    crow -t es -f $ubicacion > $tempPath
+    env tempPath=$tempPath ./swaper.py
 else
     echo file does no exists
 end
