@@ -5,16 +5,22 @@ import re
 path = os.environ['tempPath']
 
 def rmTimestamp(l):
-    pa = re.compile('\[\d\d:\ ?\d\d\.\d\d\]\ ?')
-    busqueda = pa.search(l)
+    busqueda = re.match('\[\d\d:\ ?\d\d\.\d\d\]\ ?', l)
     if not busqueda is None:
         l = l[busqueda.span()[1]:]
         return l
     else:
         return l
 
+rutaArchivoFinal = re.sub('.+/', '', path)
+rutaArchivoFinal = re.sub('\.templyc', '.txt', rutaArchivoFinal)
+#os.environ['rutaArchivoFinal'] = rutaArchivoFinal
+print(rutaArchivoFinal)
+
 try:
     archivo = open(path, "r")
+    archivoFinal = open("letras/" + rutaArchivoFinal , "w")
+    archivoFinal.write('---\n')
 
     patron = re.compile('\[\ .* -> Spanish \]')
     cad = str(archivo.read())
@@ -26,8 +32,9 @@ try:
 
     for i in range(max(p1len, p2len)):
         if p1len > i:
-            print(rmTimestamp(part1[i]))
+            archivoFinal.write(rmTimestamp(part1[i] + '\n'))
         if p2len > i + 2:
-            print(rmTimestamp(part2[i+2]))
+            archivoFinal.write(rmTimestamp(part2[i+2] + '\n'))
 finally:
     archivo.close()
+    archivoFinal.close()

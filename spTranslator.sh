@@ -4,13 +4,27 @@ set nombre (mpc -f "%artist% - %title%" | head -n 1)
 set ubicacion /home/lugo/.lyrics/$nombre.txt
 set tempPath letras/$nombre.templyc
 
+function yaModificada -a ruta
+    return (head -n 1 $ruta | grep -Pq '^\-\-\-$')
+end
+
 if test -e $ubicacion
-    #crow -t es -f $ubicacion | tee $tempPath
-    #crow -t es -f $ubicacion
-    crow -t es -f $ubicacion > $tempPath
-    env tempPath=$tempPath ./swaper.py
+    if ! yaModificada $ubicacion
+        echo hola
+        #crow -t es -f $ubicacion | tee $tempPath
+        #crow -t es -f $ubicacion
+        cat $ubicacion | crow -t es -i > $tempPath # -f $ubicacion
+        set rutaNueva (env tempPath=$tempPath ./swaper.py)
+        mv $ubicacion $ubicacion.bak
+        cp letras/$rutaNueva $ubicacion
+    else
+        echo there is already swaped
+    end
 else
-    echo file does no exists
+    echo file does no exists reading for lyrics
+    if test -e letra
+        yes | cp letra $ubicacion
+    end
 end
 
 function estaEnEspañol
