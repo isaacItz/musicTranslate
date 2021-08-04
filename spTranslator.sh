@@ -21,16 +21,21 @@ end
 
 function swap
     if test -e $UBICACION
-        if ! yaModificada
-            #crow -t es -f $UBICACION | tee $tempPath
-            #crow -t es -f $UBICACION
-            cat $UBICACION | crow -t es -i > $tempPath # -f $UBICACION
-            set RUTANUEVA (env tempPath=$tempPath ./swaper.py)
-            mv $UBICACION $UBICACION.bak
-            cp letras/$RUTANUEVA $UBICACION
-            return 0
+        if ! estaEnEspañol
+            if ! yaModificada
+                #crow -t es -f $UBICACION | tee $tempPath
+                #crow -t es -f $UBICACION
+                cat $UBICACION | crow -t es -i > $tempPath # -f $UBICACION
+                set RUTANUEVA (env tempPath=$tempPath ./swaper.py)
+                mv $UBICACION $UBICACION.bak
+                cp letras/$RUTANUEVA $UBICACION
+                return 0
+            else
+                echo there is already swaped
+                return 1
+            end
         else
-            echo there is already swaped
+            echo "it's already in humilde"
             return 1
         end
     else
@@ -61,6 +66,13 @@ function lyrics
         vim $UBICACION
     case --edit
         vim $UBICACION
+    case --restore
+        if test -e $UBICACION.bak
+            mv $UBICACION.bak $UBICACION
+            echo restored!
+        else
+            echo .bak file does not exists
+        end
     case '*'
         swap
     end
