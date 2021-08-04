@@ -74,6 +74,8 @@ function lyrics
         else
             echo .bak file does not exists
         end
+    case --watch-backup
+        less $UBICACION.bak
     case '*'
         swap
     end
