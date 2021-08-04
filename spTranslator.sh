@@ -1,6 +1,7 @@
 #!/usr/bin/fish
 #set je (mpc -f "%file%" | head -n 1 | sed -r 's/.*\///' | sed -r 's/(\.mp3|\.flac)/.lrc/') ; find /home/lugo/DOWNLOADS/ -iname "*$je*"
-set NOMBRE (mpc -f "%artist% - %title%" | head -n 1)
+#mpc -f "%artist% - %title%" | head -n 1 | sed 's/\///'
+set NOMBRE (mpc -f "%artist% - %title%" | head -n 1 | sed 's/\///g')
 set UBICACION /home/lugo/.lyrics/$NOMBRE.txt
 set tempPath letras/$NOMBRE.templyc
 

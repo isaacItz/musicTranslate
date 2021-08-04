@@ -31,10 +31,15 @@ try:
     p2len = len(part2)
 
     for i in range(max(p1len, p2len)):
+        line1 = None
+        line2 = None
         if p1len > i:
-            archivoFinal.write(rmTimestamp(part1[i] + '\n'))
+            line1 = rmTimestamp(part1[i] + '\n')
+            archivoFinal.write(line1)
         if p2len > i + 2:
-            archivoFinal.write(rmTimestamp(part2[i+2] + '\n'))
+            line2 = rmTimestamp(part2[i + 2] + '\n')
+            if line2 != line1:
+                archivoFinal.write(line2)
 finally:
     archivo.close()
     archivoFinal.close()
