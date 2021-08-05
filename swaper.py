@@ -19,7 +19,7 @@ print(rutaArchivoFinal)
 
 try:
     archivo = open(path, "r")
-    archivoFinal = open("letras/" + rutaArchivoFinal , "w")
+    archivoFinal = open("/home/lugo/.letras/" + rutaArchivoFinal , "w")
     archivoFinal.write('---\n')
 
     patron = re.compile('\[\ .* -> Spanish \]')
