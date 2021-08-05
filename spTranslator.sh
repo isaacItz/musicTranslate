@@ -100,8 +100,7 @@ function lyrics
 end
 
 function __estaEnEspañol
-   set IDIOMAS (mpc -f "%albumartist% %album% %title%" | head -n 1 | crow -t es -i | grep -P '\[.*\]')
-   echo $IDIOMAS
+   set IDIOMAS (mpc -f "%albumartist% %album% %title%" | head -n 1 | crow -t es -i | grep -P '\[\ \w*\ \->\ \w*\ \]')
    if test $IDIOMAS = '[ Spanish -> Spanish ]'
        return 0
    else
