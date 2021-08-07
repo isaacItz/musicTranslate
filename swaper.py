@@ -34,11 +34,12 @@ try:
         line1 = None
         line2 = None
         if p1len > i:
+            #line1 = re.sub('^\-\[?')
             line1 = rmTimestamp(part1[i] + '\n')
-            archivoFinal.write(line1)
+            archivoFinal.write('-' + line1)
         if p2len > i + 2:
             line2 = rmTimestamp(part2[i + 2] + '\n')
-            if line2 != line1:
+            if line2 != line1[1:]:
                 archivoFinal.write(line2)
 finally:
     archivo.close()

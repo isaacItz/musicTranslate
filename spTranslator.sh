@@ -2,7 +2,7 @@
 #set je (mpc -f "%file%" | head -n 1 | sed -r 's/.*\///' | sed -r 's/(\.mp3|\.flac)/.lrc/') ; find /home/lugo/DOWNLOADS/ -iname "*$je*"
 #mpc -f "%artist% - %title%" | head -n 1 | sed 's/\///'
 function __init
-    set -g NOMBRE (mpc -f "%artist% - %title%" | head -n 1 | sed 's/\///g')
+    set -g NOMBRE (mpc -f "%artist% - %title%" | head -n 1 | sed 's/[/:*?]//g')
     set -g UBICACION /home/lugo/.lyrics/$NOMBRE.txt
     set -g tempPath /home/lugo/.letras/$NOMBRE.templyc
     if test -e /home/lugo/.letras
@@ -25,8 +25,10 @@ end
 function __findLyrics
     set CANCIONACTUAL /home/lugo/DOWNLOADS/(mpc -f "%file%" | head -n 1 |  sed -r 's/\.\w{3,4}/.lrc/')
     if test -e $CANCIONACTUAL
-        cp $UBICACION $UBICACION.bak
-        yes | cp $CANCIONACTUAL $UBICACION
+        if test -e $UBICACION
+            mv $UBICACION $UBICACION.bak
+        end
+        cp $CANCIONACTUAL $UBICACION
         return 0
     else
         return 1
@@ -44,6 +46,7 @@ function __swap
                 mv $UBICACION $UBICACION.bak
                 rm $tempPath
                 mv /home/lugo/.letras/$RUTANUEVA $UBICACION
+                ln -s -f $RUTANUEVA /home/lugo/.lyrics/index.html
                 return 0
             else
                 echo there is already swaped
@@ -99,7 +102,8 @@ function lyrics
         case help
             __help_lyrics
         case '*'
-            __help_lyrics
+            echo -e lyrics has no command \"$argv\".\n
+            echo -e "to see al lyrics's commands, run:\n  lyrics help"
         end
     else
         echo 'can not make directory "letras"'
