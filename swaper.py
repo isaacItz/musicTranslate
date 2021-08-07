@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import re
+import sys
 
 path = os.environ['tempPath']
 
@@ -39,7 +40,9 @@ try:
             archivoFinal.write('-' + line1)
         if p2len > i + 2:
             line2 = rmTimestamp(part2[i + 2] + '\n')
-            if line2 != line1[1:]:
+            #print("linea 1: " + line1, file=sys.stdout)
+            #print("linea 2: " + line2, file=sys.stdout)
+            if line2 != line1:
                 archivoFinal.write(line2)
 finally:
     archivo.close()
