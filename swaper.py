@@ -9,9 +9,7 @@ def rmTimestamp(l):
     busqueda = re.match('\[\d\d:\ ?\d\d\.\d\d\]\ ?', l)
     if not busqueda is None:
         l = l[busqueda.span()[1]:]
-        return l
-    else:
-        return l
+    return l
 
 rutaArchivoFinal = re.sub('.+/', '', path)
 rutaArchivoFinal = re.sub('\.templyc', '.txt', rutaArchivoFinal)
@@ -37,11 +35,9 @@ try:
         if p1len > i:
             #line1 = re.sub('^\-\[?')
             line1 = rmTimestamp(part1[i] + '\n')
-            archivoFinal.write('-' + line1)
+            archivoFinal.write('' + line1)
         if p2len > i + 2:
-            line2 = rmTimestamp(part2[i + 2] + '\n')
-            #print("linea 1: " + line1, file=sys.stdout)
-            #print("linea 2: " + line2, file=sys.stdout)
+            line2 = rmTimestamp(part2[i + 2] + '\n\n')
             if line2 != line1:
                 archivoFinal.write(line2)
 finally:

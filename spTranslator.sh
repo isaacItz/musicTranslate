@@ -35,7 +35,7 @@ function __findLyrics
     end
 end
 
-function __swap
+function __swap -a BACKUP
     if test -e $UBICACION
         if ! __estaEnEspañol
             if ! __yaModificada
@@ -43,7 +43,9 @@ function __swap
                 #crow -t es -f $UBICACION
                 cat $UBICACION | crow -t es -i > $tempPath # -f $UBICACION
                 set RUTANUEVA (env tempPath=$tempPath /home/lugo/.letras/swaper.py)
-                mv $UBICACION $UBICACION.bak
+                if test $BACKUP -eq 0
+                    mv $UBICACION $UBICACION.bak
+                end
                 rm $tempPath
                 mv /home/lugo/.letras/$RUTANUEVA $UBICACION
                 ln -s -f $RUTANUEVA /home/lugo/.lyrics/index.html
@@ -73,7 +75,7 @@ function lyrics
         switch $argv
         case find
             if __findLyrics
-                __swap
+                __swap 1
             else
                 echo "there is no lrc file in song's directory"
             end
@@ -98,9 +100,13 @@ function lyrics
         case watch-backup
             less $UBICACION.bak
         case ''
-            __swap
+            __swap 0
         case help
             __help_lyrics
+        case diff
+            __diff
+        case remove
+            __remove_all
         case '*'
             echo -e lyrics has no command \"$argv\".\n
             echo -e "to see al lyrics's commands, run:\n  lyrics help"
@@ -120,6 +126,8 @@ function __help_lyrics
     echo -e "  create\tcreate a new txt file for put your own lyrics"
     echo -e "  edit\t\tedit the current txt file"
     echo -e "  watch-backup\tless the backup file (the file generated when lyrics without arguments is used)"
+    echo -e "  diff\t\tsee differences between bakup and acutal lyrics"
+    echo -e "  remove\tremove backup(original lyrics) and the actual lyrics displayed"
     echo -e "  help\t\tdisplays this message"
 end
 
@@ -132,14 +140,25 @@ function __estaEnEspañol
    end
 end
 
-funcsave __init
-funcsave __yaModificada
-funcsave __findLyrics
-funcsave __swap
-funcsave __readLocalLyrics
-funcsave __estaEnEspañol
-funcsave __help_lyrics
-funcsave lyrics
+function __diff
+    if test -e $UBICACION -a -e $UBICACION.bak
+        vimdiff $UBICACION $UBICACION.bak
+    end
+end
+
+function __remove_all
+    if test -e $UBICACION
+        rm $UBICACION
+    end
+    if test -e $UBICACION.bak
+        rm $UBICACION.bak
+    end
+end
+
+set add __init __remove_all __yaModificada __findLyrics __swap __readLocalLyrics __estaEnEspañol __help_lyrics __diff lyrics
+for i in $add
+    funcsave $i
+end
 yes | cp swaper.py /home/lugo/.letras/swaper.py
 
-#lyrics $argv
+#comando diff compara entre la letra acutal y el backup. util cuando remplazas una letra con la original(la de la song de deezer)
